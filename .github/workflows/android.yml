@@ -1,5 +1,6 @@
-name: Build Launcher And Libraries
+name: Build and Release Artifacts
 
+# 工作流触发器
 on:
   watch:
     types: [started]
@@ -12,14 +13,28 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    # Checkout 源代码
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # 全量拉取
+
+    # 设置 JDK
     - name: Set up JDK 17
       uses: actions/setup-java@v3
-      with: { java-version: '17', distribution: 'temurin', cache: gradle }
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+
+    # Gradle 构建
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+
+    # 执行构建
     - name: Build Release APK
-      run: ./gradlew clean :app:assembleRelease :watchface-dev-utils:bundleReleaseAar :watchface-example:packageReleaseWatchface
+      run: ./gradlew clean :app:assembleRelease :watchface-dev-utils:bundleReleaseAar :watchface-example:packageReleaseWatchface --info
+
+    # 上传构建产物
     - name: Upload Release Artifacts
       uses: actions/upload-artifact@v4
       with:
