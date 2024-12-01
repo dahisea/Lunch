@@ -16,18 +16,8 @@ jobs:
       with: { java-version: '17', distribution: 'temurin', cache: gradle }
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Build Debug APK
-      run: ./gradlew clean :app:assembleDebug :watchface-dev-utils:bundleDebugAar :watchface-example:packageDebugWatchface
     - name: Build Release APK
       run: ./gradlew clean :app:assembleRelease :watchface-dev-utils:bundleReleaseAar :watchface-example:packageReleaseWatchface
-    - name: Upload Debug Artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: debug-artifacts
-        path: |
-          app/build/outputs/apk/debug/*.apk
-          watchface-dev-utils/build/outputs/aar/*.aar
-          watchface-example/build/outputs/watchface/debug/*.zip
     - name: Upload Release Artifacts
       uses: actions/upload-artifact@v4
       with:
